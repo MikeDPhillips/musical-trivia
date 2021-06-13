@@ -5,7 +5,7 @@ const PORT = process.env.PORT || 3001;
 const path = require('path');
 const app = express();
 
-app.use(express.static(path.resolve(__dirname, '../client/build')));
+app.use(express.static(path.resolve(__dirname, '../client/build/public')));
 
 app.get("/api", (req, res) => {
     res.json({message: "Hello from server!"});
