@@ -5,66 +5,70 @@
 	<meta charset ="utf-8" name="viewport" content = "width=device-width, initial-scale=1" />
 	<link href="../style/transition.css" rel="stylesheet" />
 	<script type="text/javascript" src="https://code.jquery.com/jquery-1.6.4.min.js"></script>
-	<script src="../javascript/player.js"></script> 
+	<script type ="text/javascript" src="../javascript/textFit.js"></script>
+	<script src="../javascript/player.js"></script>
 </head>
 
-<!-- Begin Button -->
+
 <body id="change">
-<div class="flex">
-  <a href="#0" class="bttn" id ="strBtn">Begin</a>
-</div>
+
+<div class="wrapper">
+	<div class="header">Amuse-Me</div>
+	<div class="footer">Created by Michael Phillips</div>
 
 <!-- Score -->
-<div class ="score_label">Score</div>
-<div class ="score" id="score">0</div>
-<!-- PlayButton -->
-<div class='container' >
-  <a href='#' class='playBut' id='stpBtn'>
-    
-<svg version="1.1"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
-	 x="0px" y="0px"  viewBox="0 0 213.7 213.7" enable-background="new 0 0 213.7 213.7"
-	 xml:space="preserve">
+
+<div class="scorebox hide">
+<div class ="score_label">Score
+<span class ="score" id="score">0</span></div>
+</div>
+
+	<div class='play-container' >
+		<a href='#' class='playBut' id='stpBtn'>
+
+			<svg id = "playbutton"  class="play" version="1.1"
+					 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+					 x="0px" y="0px"  viewBox="0 0 213.7 213.7" enable-background="new 0 0 213.7 213.7"
+					 xml:space="preserve">
 
 <polygon class='triangle' id="XMLID_18_" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
 	73.5,62.5 148.5,105.8 73.5,149.1 "/>
-  
-<circle class='circle' id="XMLID_17_" fill="none"  stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3"/>
+
+				<circle class='circle' id="XMLID_17_" fill="none"  stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3"/>
 </svg>
-    
- </a>
-</div>
-<audio id="audio" controls="controls">
-  	<source id="audioSource" src=""></source>
-  	Your browser does not support the audio format.
-	</audio>
-<!-- Answer Input Box -->
-	<form id="myform">
-    <input id="myanswer" name="input" value="" type="text" autocomplete="off"/>
-    </form>
-<!-- Enter Button -->
-<button id="myBtn" class="button">Enter</button>
-	<!-- Make Modal -->
-	<div id="myModal" class="modal">
-		<!-- Set Modal content -->
-		<div class="modal-content" id="content">
-			<p id="answer"> </p>
-			<button class ="close" id="close">QUIT GAME</button>
-			<button class ="continue" id="continue">CONTINUE</button>
+
+		</a>
+	</div>
+
+	<div class="counter hide">
+		:30
+	</div>
+
+	<div class="begin">
+		<span class = "blink">Click play to begin!</span>
+	</div>
+
+	<div class="game-area hide" >
+		<div class="btn-group">
+			<div class="column1">
+				<button class = "button"><span class="fittedtext">21  Pilots</span> </button>
+				<button class = "button"><span class="fittedtext">Third Eye Blind</span></button>
+				<button class = "button"><span class="fittedtext">Presidents of the United States of America</span> </button>
+			</div>
+			<div class="column2">
+				<button class = "button"><span class="fittedtext">OKGo </span></button>
+				<button class = "button"><span class="fittedtext">Bright Eyes</span></button>
+				<button class = "button"><span class="fittedtext">Tool</span></button>
+			</div>
 		</div>
 	</div>
 
-<!-- Hint Button -->
-<button id="hint" class="hintbutton">Hint</button>
-	<!-- Make Modal -->
-	<div id="hintModal" class="modal">
-		<!-- Set Modal content -->
-		<div class="modal-content" id="hintcontent">
-			<p id="hintanswer"> </p>
-			<button class ="hint" id="stay">OK</button>
-		</div>
-	</div>
-</body>
+</div>
+
+<audio id="audio"  controls="controls">
+	<source id="audioSource" src=""></source>
+	Your browser does not support the audio format.
+</audio>
 
 	<script src="../javascript/transition.js"></script> 
 </body>

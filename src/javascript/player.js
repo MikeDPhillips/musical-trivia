@@ -1,3 +1,4 @@
+window.nowPlaying = null;
 /*
  *  initialize function prototype and attributes
  */
@@ -7,6 +8,7 @@ function spotifyPlayer(genre, number) {
     this.accessToken = undefined;
     this.counter = 0;
     this.list = [];
+    this.rawData = [];
 }
 
 /*
@@ -26,7 +28,9 @@ spotifyPlayer.prototype.initList = function() {
             data: {
                 seed_genres: self.genre,
                 market: 'US',
-                popularity: 100
+                min_popularity: 50,
+                offset: Math.random() * 100,
+                limit: 50
             },
 
             headers: {
@@ -35,32 +39,43 @@ spotifyPlayer.prototype.initList = function() {
 
         })
         .done(function(data) {
+            console.log("Data is");
             console.log(data);
+
             for (eachTrack of data.tracks) {
+
+                let currTrack = {
+                    album: eachTrack.album || 'Unknown',
+
+                    artists: eachTrack.artists.map(a => a.name).join(', ') || 'Unknown',
+
+                    name: cleanName(eachTrack.name),
+                    preview_url: eachTrack.preview_url,
+                    id: eachTrack.id,
+                    popularity: eachTrack.popularity || 80
+                }
+                self.rawData.push(currTrack);
                 if (eachTrack.preview_url !== null) {
-                    let currTrack = {
-                        album: eachTrack.album || 'Unknown',
-
-                        artists: eachTrack.artists.map(a => a.name).join(', ') || 'Unknown',
-
-                        name: eachTrack.name,
-                        preview_url: eachTrack.preview_url,
-                        id: eachTrack.id
-                    }
-
-                    //console.log(eachTrack.artists[0].name);
-
                     self.list.push(currTrack);
                 }
             }
+            window.nowPlaying = self.list[0];
             self.numberTracks = self.list.length;
-
+            console.log("list is ")
+            console.log(self.rawData);
             deferred.resolve();
         });
     });
 
     return deferred;
 };
+
+const cleanName = (n) => {
+    n = n.replace(/\s*\(.*?\)\s*/g, '');
+    n = n.split('-')[0].trim();
+    n = n.split('feat.')[0].trim();
+    return(n);
+}
 
 spotifyPlayer.prototype.expand = function() {
     var self = this;
@@ -88,7 +103,8 @@ spotifyPlayer.prototype.expand = function() {
                     artists: eachTrack.artists.map(a => a.name).join(', ') || 'Unknown',
                     name: eachTrack.name,
                     preview_url: eachTrack.preview_url,
-                    id: eachTrack.id
+                    id: eachTrack.id,
+                    popularity: eachTrack.popularity || 80
                 }
                 self.list.push(currTrack);
             }
@@ -106,10 +122,16 @@ spotifyPlayer.prototype.expand = function() {
  */
 spotifyPlayer.prototype.next = function() { 
 
-    console.log(this.counter, this.list.length); 
-
-    this.counter++; 
+    console.log(this.counter, this.list.length);
+    this.counter++;
+    window.nowPlaying = this.list[this.counter];
     
+};
+
+spotifyPlayer.prototype.getCurrentTrack = function() {
+    if(this.counter < this.numberTracks) {
+        return (this.list[this.counter]);
+    }
 };
 
 spotifyPlayer.prototype.getSongName = function() {
@@ -129,8 +151,6 @@ spotifyPlayer.prototype.getArtist = function() {
  *  return a url to the song
  */
 spotifyPlayer.prototype.getPlayerURL = function() {
-
-console.log(this.list[this.counter].name);  
     if (this.counter == this.numberTracks - 1){
         this.expand();
         return this.list[this.counter].preview_url;
@@ -149,6 +169,8 @@ console.log(this.list[this.counter].name);
 spotifyPlayer.prototype.checkAnswer = function (answer) {
     // var key_words = (this.list[this.counter].name).replace(/\([^)]*\)/g, " ").split(/\W+/); // split by non-word chars
     // console.log(key_words);
+    console.log("The whole list:")
+    console.log(this.list);
     var key_words = (this.list[this.counter].name).replace(/\([^)]*\)/g, "");
     console.log(key_words);
     var key_words = key_words.split(/\W+/);

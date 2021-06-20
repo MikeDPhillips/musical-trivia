@@ -1,5 +1,5 @@
 
-
+// old code
 //changes audio
 var change = document.getElementById('change');
 
@@ -11,22 +11,17 @@ $('html').bind('keypress', function(e) {
 });
 
 
-window.onresize = () => {
-  textFit($(".button"), {minFontSize:12, maxFontSize: 50,
-    alignVert: false, alignHoriz:false, reProcess:true});
-}
-
 var genreForRound = localStorage.getItem('genre');
 console.log(genreForRound);
 var genres = ["hip-hop", "pop", "classical", "country", "rock"];
 if(genreForRound == "shuffle")
 {
     var rand = genres[Math.floor(Math.random() * genres.length)];
-    var player = new spotifyPlayer(rand, 5);
+    var player = new spotifyPlayer(rand, 10);
     console.log(rand);
 }
 else
-    var player = new spotifyPlayer(genreForRound, 5);
+    var player = new spotifyPlayer(genreForRound, 10);
 
 
 var isPlaying = false;
@@ -43,31 +38,18 @@ function changeAudioElement(){
   audio.play(); //call this to play the song right away
 }
 
-change.onload = async () => {
-    const result = await player.initList();
-};
-
-var counter = 30;
-var timerID = null;
-function countdown() {
-    counter--;
-    if (counter === 0) {
-      clearInterval(timerID);
-    }
-    else {
-      $('.counter').text(`:${counter}`);
-    }
-};
-function resetTimer() {
-  clearInterval(timerID);
-  counter =30;
-  $('.counter').text(`:${counter}`);
-  timerID = setInterval(countdown, 1000);
+change.onload = function() {
+    player.initList();
 }
 
+// $(document).ready(function() {
+//     player.initList();
+// })
+
+var start = document.getElementById('strBtn');
 var stop = document.getElementById('stpBtn');
 // Get the modal
-var modal = document.getElementById('game-area');
+var modal = document.getElementById('myModal');
 
 //hint modal
 var hintmodal = document.getElementById('hintModal');
@@ -90,18 +72,37 @@ var userinput = "";
 // Try to read the score from localStorage
 // if not there then initalize it to 0
 // NOTE; we need to reset this to 0 somewhere when we are done with score
-var score = 0;
+var score = localStorage.getItem("score");
+if (!score){
+    score = 0;
+    localStorage.setItem("score", score);
+}
 
-
-var num_wrong = 0;
+var num_wrong = localStorage.getItem("num_wrong");
+if (!num_wrong){
+    num_wrong = 0;
+    localStorage.setItem("num_wrong", num_wrong);
+}
 
 
 var my_genre = localStorage.getItem("genre")
 if (!my_genre)
     my_genre = "NA";
 
+// Try to read the score from localStorage
+// if not there then initalize it to 0
+// NOTE; we need to reset this to 0 somewhere when we are done with score
+var score = localStorage.getItem("score");
+if (!score){
+    score = 0;
+    localStorage.setItem("score", score );
+}
 
-
+var num_wrong = localStorage.getItem("num_wrong");
+if (!num_wrong){
+    num_wrong = 0;
+    localStorage.setItem("num_wrong", num_wrong);
+}
 
 //player object; name is inherited from index.js
 var this_player = {
@@ -111,102 +112,13 @@ var this_player = {
     thegenre: my_genre
 };
 
-
-const updateScore = (pts) => {
-  this_player.thescore += pts;
-  $("#score").text(this_player.thescore);
-};
-
-$(".button").click((event) => {
-  let answer = event.currentTarget.innerText;
-  console.log("Your answer is " + answer);
-  if (answer === player.getSongName()) {
-    let track = player.getCurrentTrack();
-    let time = parseInt($('.counter').text().replace(':',''));
-    console.log("Time = " + time);
-    let pts = (100-track.popularity)*time;
-    console.log("Youre right for " + (100-track.popularity)*time + " points");
-    let scaledPts = 100*pts / ((100)*30);
-    console.log("Scaled value is " + Math.ceil(scaledPts/5)*5);
-    updateScore(Math.ceil(scaledPts/5)*5);
-  }
-  player.next();
-  changeAudioElement();
-  audio.play();
-  console.log("Now playing: " + player.getSongName());
-  getAnswers();
-  resetTimer(timerID);
-});
-
-
-
-var audio = document.getElementById('audio');
-stop.onclick = function() {
-  $('.begin').addClass("hide");
-  $('.game-area').removeClass("hide");
-  $('.play-container').addClass("hide");
-  $('.scorebox').removeClass("hide");
-  $('.counter').removeClass("hide");
-  resetTimer(timerID);
-  changeAudioElement();
-  console.log("Hit the button.");
-  audio.play();
-  console.log("Now playing: " + player.getSongName());
+btn.onclick = function() {
+  audio.pause();
   userinput = "Answer"
-  console.log(player.list);
-  getAnswers();
-}
 
-const getAnswers =  () => {
-  console.log("Song list is ");
-  let songList = getSongList(player.rawData, 6);
-  console.log(songList);
+  //alert(userinput);
 
-  $('.button').each((i, obj) => {
-    $("span", obj).text(songList[i].name);
-  })
-  $('.textFitted').css({fontSize:"2px"});
-  textFit($('.button'));
-}
-
-function togglePlay() {
-  if (isPlaying) {
-   // audio.pause();
-    $('#playbutton').attr("opacity", 1);
-  } else {
-    $('#playbutton').attr("opacity", 1);
-    audio.play();
-  }
-};
-
-audio.onplaying = function() {
-  isPlaying = true;
-};
-audio.onpause = function() {
-  isPlaying = false;
-};
-
-const getSongList = (li, n) => {
-  let newList = [window.nowPlaying];
-  while(newList.length < n) {
-    let title = li[Math.floor(Math.random()*li.length)];
-    if(newList.find(obj => obj.name === title.name) == null)
-      newList.push(title);
-  }
-  shuffle(newList);
-return newList;
-}
-
-
-//Shuffle an array
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
-
-// modal.style.display="block";
+  $("answer-box").attr("display", "block");
 
 
 /*  let result = player.checkAnswer(userinput);
@@ -236,6 +148,23 @@ function shuffle(array) {
       window.location.assign("stats.html")
     }
   }*/
+
+
+}
+
+
+// When the user clicks on <span> (x), close the modal
+close.onclick = function() {
+
+
+  //modal.style.display = "none";
+
+  window.location.assign("stats.html");
+
+
+}
+
+
 
 
 //     //code will be added here to submit to database
@@ -273,22 +202,30 @@ function shuffle(array) {
 // };
 
 
-/*cont.onclick= function() {
+cont.onclick= function() {
     modal.style.display = "none";
     //window.location.reload();
     player.next();
     changeAudioElement();
     document.getElementById("myform").reset();
 
-}*/
+}
 
-/*
+stay.onclick=function() {
+  hintmodal.style.display = "none";
+}
 
+start.onclick = function() {
+  $("#playbutton").attr("opacity", 1);
+    changeAudioElement();
+    start.style.visibility = "hidden";
+    hintcount = 0;
+}
 
 hint.onclick = function() {
       hintcount++;
-      //audio.pause();
-      userinput = "Hi Hi Hi";
+      audio.pause();
+      userinput = document.getElementById("myanswer").value;
       let result = player.checkAnswer(userinput);
       hintmodal.style.display = "block";
       let hintcontent = document.getElementById("hintanswer");
@@ -297,4 +234,28 @@ hint.onclick = function() {
         hintcontent.innerHTML = "<h1>No more hints!</h1>";
       else
         hintcontent.innerHTML = "<h1>Hint: " + songname + "</h1>";
-}*/
+}
+
+var audio = document.getElementById('audio');
+stop.onclick = function() {
+  console.log("Hit the button.");
+    togglePlay();
+}
+
+function togglePlay() {
+  if (isPlaying) {
+    audio.pause();
+    $('#playbutton').attr("opacity", 0.1);
+  } else {
+    $('#playbutton').attr("opacity", 1);
+    audio.play();
+  }
+};
+
+audio.onplaying = function() {
+  isPlaying = true;
+};
+audio.onpause = function() {
+  isPlaying = false;
+};
+
