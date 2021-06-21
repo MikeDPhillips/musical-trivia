@@ -67,59 +67,26 @@ function resetTimer() {
 }
 
 var stop = document.getElementById('stpBtn');
-// Get the modal
-var modal = document.getElementById('game-area');
-
-//hint modal
-var hintmodal = document.getElementById('hintModal');
-
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-
-// Get the button that closes the modal
-var close = document.getElementById("close");
-
-var cont = document.getElementById("continue");
-
-var hint = document.getElementById("hint");
-
-var stay = document.getElementById("stay");
-
-var userinput = "";
-//$('#playbutton').attr("opacity", 0.0);
-
-// Try to read the score from localStorage
-// if not there then initalize it to 0
-// NOTE; we need to reset this to 0 somewhere when we are done with score
-var score = 0;
-
-
-var num_wrong = 0;
-
-
 var my_genre = localStorage.getItem("genre")
 if (!my_genre)
     my_genre = "NA";
 
 
-
-
 //player object; name is inherited from index.js
 var this_player = {
 	thename: name,
-	thescore: score,
-	nwrong: num_wrong,
+	thescore: 0,
     thegenre: my_genre
 };
 
 
 const updateScore = (pts) => {
+  console.log(pts);
   this_player.thescore += pts;
   $("#score").text(this_player.thescore);
 };
 
 $(".button").click((event) => {
-
   let answer = event.currentTarget.innerText;
   console.log("Your answer is " + answer);
   if (answer === player.getSongName()) {
@@ -134,7 +101,8 @@ $(".button").click((event) => {
   }
   tracksRemaining--;
   if (tracksRemaining===0) {
-    alert(`Game over you scored ${this_player.thescore} points!`);
+    endGame();
+    window.location.assign("genre.html");
     return;
   }
   player.next();
@@ -145,6 +113,10 @@ $(".button").click((event) => {
   resetTimer(timerID);
 });
 
+const endGame = () => {
+  alert(`Game over you scored ${this_player.thescore} points!`);
+  console.log(this_player);
+}
 
 
 var audio = document.getElementById('audio');
@@ -156,6 +128,7 @@ $('#startLink').click(function() {
   console.log("Start has been clicked");
   beginGame();
 });
+
 
 const beginGame = () => {
   $('.play-container').hide();
@@ -188,22 +161,6 @@ const getAnswers =  () => {
   textFit($('.button'));
 }
 
-function togglePlay() {
-  if (isPlaying) {
-   // audio.pause();
-    $('#playbutton').attr("opacity", 1);
-  } else {
-    $('#playbutton').attr("opacity", 1);
-    audio.play();
-  }
-};
-
-audio.onplaying = function() {
-  isPlaying = true;
-};
-audio.onpause = function() {
-  isPlaying = false;
-};
 
 const getSongList = (li, n) => {
   let newList = [window.nowPlaying];
