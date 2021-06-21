@@ -149,11 +149,23 @@ $(".button").click((event) => {
 
 var audio = document.getElementById('audio');
 stop.onclick = function() {
+  beginGame();
+}
+
+$('#startLink').click(function() {
+  console.log("Start has been clicked");
+  beginGame();
+});
+
+const beginGame = () => {
+  $('.play-container').hide();
+  score = 0;
+  tracksRemaining = 5;
   $('.begin').addClass("hide");
   $('.game-area').removeClass("hide");
-  $('.play-container').addClass("hide");
   $('.scorebox').removeClass("hide");
   $('.counter').removeClass("hide");
+
   resetTimer(timerID);
   changeAudioElement();
   console.log("Hit the button.");
