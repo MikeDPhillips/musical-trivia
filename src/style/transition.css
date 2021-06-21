@@ -156,6 +156,13 @@ body {
   left: 0;
   margin-bottom:5px;
 }
+
+.playBut .circle {
+  stroke: #CC6600;
+  stroke-dasharray: 0;
+  stroke-dashoffset: 0;
+  -webkit-transition: all 0.5s ease-in-out;
+}
 @media (hover) {
   .button:hover {
     background-color: #CC6600;
@@ -185,18 +192,22 @@ body {
       transform: translateX(0);
     }
   }
+  .playBut .circle{
+    stroke: #CC6600;
+    stroke-dasharray: 650;
+    stroke-dashoffset: 650;
+    -webkit-transition: all 0.5s ease-in-out;
+    opacity: 0.3;
+  }
   .playBut:hover .circle {
     stroke-dashoffset: 0;
     opacity: 1;
   }
 }
 
-@media(hover:none) {
-  .playBut .circle {
-    stroke-dasharray: 0;
-    stroke-dashoffset: 0;
-  }
-}
+
+
+
 
 
 /*.button:not(:last-child) {
@@ -220,13 +231,6 @@ audio {
   transform: translateY(0);
 }
 
-.playBut .circle {
-  stroke: #CC6600;
-  stroke-dasharray: 650;
-  stroke-dashoffset: 650;
-  -webkit-transition: all 0.5s ease-in-out;
-  opacity: 1;
 
-}
 
 
