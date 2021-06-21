@@ -189,7 +189,13 @@ body {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  
+}
+
+@media(hover:none) {
+  .playBut .circle {
+    stroke-dasharray: 0;
+    stroke-dashoffset: 0;
+  }
 }
 
 
@@ -220,6 +226,7 @@ audio {
   stroke-dashoffset: 650;
   -webkit-transition: all 0.5s ease-in-out;
   opacity: 1;
+
 }
 
 

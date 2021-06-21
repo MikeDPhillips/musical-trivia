@@ -47,6 +47,7 @@ change.onload = async () => {
     const result = await player.initList();
 };
 
+let tracksRemaining = 5;
 var counter = 30;
 var timerID = null;
 function countdown() {
@@ -118,6 +119,7 @@ const updateScore = (pts) => {
 };
 
 $(".button").click((event) => {
+
   let answer = event.currentTarget.innerText;
   console.log("Your answer is " + answer);
   if (answer === player.getSongName()) {
@@ -129,6 +131,11 @@ $(".button").click((event) => {
     let scaledPts = 100*pts / ((100)*30);
     console.log("Scaled value is " + Math.ceil(scaledPts/5)*5);
     updateScore(Math.ceil(scaledPts/5)*5);
+  }
+  tracksRemaining--;
+  if (tracksRemaining===0) {
+    alert(`Game over you scored ${this_player.thescore} points!`);
+    return;
   }
   player.next();
   changeAudioElement();
@@ -151,7 +158,7 @@ stop.onclick = function() {
   changeAudioElement();
   console.log("Hit the button.");
   audio.play();
-  console.log("Now playing: " + player.getSongName());
+  console.log("Now playing: " + player.getArtist());
   userinput = "Answer"
   console.log(player.list);
   getAnswers();
