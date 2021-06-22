@@ -1,52 +1,59 @@
 // index.js
 
-const express = require("express")
+const express = require("express");
+const cors = require('cors');
 const PORT = process.env.PORT || 3001;
 const path = require('path');
-const app = express();
+
+let app = express();
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(cors());
+
 const { MongoClient } = require('mongodb')
+
 //const uri = process.env.MONGODB_URI;
 const uri =
-"mongodb+srv://mdp38:PjoKKicu2ON4YsMl@triviaeast.numpm.mongodb.net/sample_mflix?retryWrites=true&w=majority";
+"mongodb+srv://mdp38:PjoKKicu2ON4YsMl@triviaeast.numpm.mongodb.net/trivia?retryWrites=true&w=majority";
+//Get database connection object
+
+
+
 app.use(express.static(path.join(__dirname, 'src')));
+
 
 app.get("/api", (req, res) => {
     res.json({message: "Hello from server!"});
 });
 
-app.get("/api/movie", async (req, res) => {
-    const client = new MongoClient(uri, {useUnifiedTopology:true});
+app.get("/api/history", async (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.header("Access-Control-Allow-Headers","X-Requested-With");
+    console.log("getting history");
+
 
     try {
-        await client.connect();
-        const database = client.db('sample_mflix');
-        const collection = database.collection('movies');
+        let client = await MongoClient.connect(uri, { useUnifiedTopology: true });
+        const database = client.db('trivia');
+        console.log(database);
+        const collection = database.collection('quiz_scores');
+        collection.find().toArray()
+            .then( results => {
+                res.send(results);
+            })
+            .catch(error => {
+                console.log(error);
+                res.sendStatus(500);
+            });
 
-        const query = { genres: "Comedy", poster: { $exists: true} };
-        const cursor = await collection.aggregate([
-        { $match: query },
-        { $sample: {size: 1} },
-        { $project:
-            {
-                title: 1,
-                fullplot: 1,
-                poster: 1
-            }
-        }
-        ]);
-        const movie = await cursor.next();
-        return res.json(movie);
+        //return res.json({message: "Connected to db!"});
     } catch(err) {
         console.log(err);
     }
-    finally {
-        await client.close();
-    }
 });
 
-app.get("/test", (req, res) => {
-    res.json({message: "This is just a test"});
-});
+
 
 app.get(['/', '/homepage.html'], (req, res) => {
    res.sendFile(path.join(__dirname, 'src/html/homepage.html'));

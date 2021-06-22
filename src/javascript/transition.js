@@ -74,16 +74,18 @@ if (!my_genre)
 
 //player object; name is inherited from index.js
 var this_player = {
-	thename: name,
-	thescore: 0,
-    thegenre: my_genre
+  pName: name,
+	pScore: 0,
+  pCorrect: 0,
+  pGenre: my_genre
 };
 
 
 const updateScore = (pts) => {
   console.log(pts);
-  this_player.thescore += pts;
-  $("#score").text(this_player.thescore);
+  this_player.pCorrect+=1;
+  this_player.pScore += pts;
+  $("#score").text(this_player.pScore);
 };
 
 $(".button").click((event) => {
@@ -114,7 +116,7 @@ $(".button").click((event) => {
 });
 
 const endGame = () => {
-  alert(`Game over you scored ${this_player.thescore} points!`);
+  alert(`Game over you scored ${this_player.pScore} points!`);
   console.log(this_player);
 }
 
