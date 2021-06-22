@@ -16,7 +16,7 @@ $(document).ready(function() {
 });
   var table = new Tabulator(".tabulator", {
     //ajaxURL:"http://localhost:5000/api/history",
-    ajaxURL:"https://musical-trivia-app.herokuapp.com/submit",
+    ajaxURL:"https://musical-trivia-app.herokuapp.com/api/history",
     ajaxParams:{key1:"name", key2:"score", key3:"genre", key4:"correct", key5:"date"},
     ajaxConfig:{
       method:"GET",
