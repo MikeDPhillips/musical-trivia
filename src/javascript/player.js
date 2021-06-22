@@ -113,6 +113,7 @@ spotifyPlayer.prototype.expand = function() {
         console.log(self.list);
         deferred.resolve();
     });
+    //Now that it's totally loaded allow mouseclicks
 
     return deferred;
 }
@@ -156,6 +157,11 @@ spotifyPlayer.prototype.getPlayerURL = function() {
         return this.list[this.counter].preview_url;
     }
     else if (this.counter < this.numberTracks) {
+        if (!this.list[this.counter]) {
+            console.log(`List is undefined at counter ${this.counter}`);
+            console.log(this.list);
+            return null;
+        }
         return this.list[this.counter].preview_url;
     }
     else {

@@ -32,10 +32,26 @@ app.get("/api", (req, res) => {
 
 app.post('/submit', (req, res) => {
     console.log(req.body)
-    let name = req.body.name;
-    let score = req.body.score;
-    let correct = req.body.correct;
-    let genre = req.body.genre;
+    // let name = req.body.name;
+    // let score = req.body.score;
+    // let correct = req.body.correct;
+    // let genre = req.body.genre;
+    let objToInsert = {
+       name:req.body.name,
+       score:req.body.score,
+       correct:req.body.correct,
+       genre:req.body.genre
+    }
+    collection.insert(objToInsert)
+        .then( result => {
+          let objToReturn = {
+            "success" : "Database has been updated",
+            "status": 200,
+            "data": objToInsert
+          };
+          res.send(JSON.stringify(objToReturn));
+          console.log(objToReturn);
+        })
 
 });
 app.get("/api/history", async (req, res) => {
@@ -43,8 +59,6 @@ app.get("/api/history", async (req, res) => {
     res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
     res.header("Access-Control-Allow-Headers","X-Requested-With");
     console.log("getting history");
-
-
     try {
         collection.find().toArray()
             .then( results => {

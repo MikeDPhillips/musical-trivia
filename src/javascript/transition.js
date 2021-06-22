@@ -1,5 +1,6 @@
 
 
+
 //changes audio
 var change = document.getElementById('change');
 
@@ -37,7 +38,10 @@ function changeAudioElement(){
   var audio = document.getElementById('audio');
 
   var source = document.getElementById('audioSource');
-  source.src = player.getPlayerURL();
+  let retValue =  player.getPlayerURL();
+  if (retValue)
+    source.src = player.getPlayerURL();
+
 
   audio.load(); //call this to just preload the audio without playing
   audio.play(); //call this to play the song right away
@@ -45,15 +49,18 @@ function changeAudioElement(){
 
 change.onload = async () => {
     const result = await player.initList();
+    $(change).css('pointer-events', 'all');
 };
 
+const TIME_PER_SONG = 10;
 let tracksRemaining = 5;
-var counter = 30;
+var counter = TIME_PER_SONG ;
 var timerID = null;
 function countdown() {
     counter--;
     if (counter === 0) {
-      clearInterval(timerID);
+      $('.counter').text(`:${counter}`);
+      nextSong();
     }
     else {
       $('.counter').text(`:${counter}`);
@@ -61,7 +68,7 @@ function countdown() {
 };
 function resetTimer() {
   clearInterval(timerID);
-  counter =30;
+  counter =TIME_PER_SONG ;
   $('.counter').text(`:${counter}`);
   timerID = setInterval(countdown, 1000);
 }
@@ -82,7 +89,6 @@ var this_player = {
 
 
 const updateScore = (pts) => {
-  console.log(pts);
   this_player.pCorrect+=1;
   this_player.pScore += pts;
   $("#score").text(this_player.pScore);
@@ -97,14 +103,17 @@ $(".button").click((event) => {
     console.log("Time = " + time);
     let pts = (100-track.popularity)*time;
     console.log("Youre right for " + (100-track.popularity)*time + " points");
-    let scaledPts = 100*pts / ((100)*30);
+    let scaledPts = 100*pts / ((100)*TIME_PER_SONG);
     console.log("Scaled value is " + Math.ceil(scaledPts/5)*5);
     updateScore(Math.ceil(scaledPts/5)*5);
   }
+  nextSong();
+});
+
+const nextSong = () => {
   tracksRemaining--;
   if (tracksRemaining===0) {
     endGame();
-    window.location.assign("genre.html");
     return;
   }
   player.next();
@@ -113,14 +122,7 @@ $(".button").click((event) => {
   console.log("Now playing: " + player.getSongName());
   getAnswers();
   resetTimer(timerID);
-});
-
-const endGame = () => {
-  alert(`Game over you scored ${this_player.pScore} points!`);
-  console.log(this_player);
 }
-
-
 var audio = document.getElementById('audio');
 stop.onclick = function() {
   beginGame();
@@ -185,15 +187,15 @@ function shuffle(array) {
 }
 
 const endGame = () => {
-  alert(`Game over you scored ${this_player.pScore} points!`);
+  //alert(`Game over you scored ${this_player.pScore} points!`);
   console.log(this_player);
 
     //code will be added here to submit to database
-    playInsert = {
-        "username": this_player.thename,
-        "score": this_player.thescore,
-        "nwrong": this_player.nwrong,
-        "genre": this_player.thegenre
+    let playInsert = {
+        "name": this_player.pName,
+        "score": this_player.pScore,
+        "correct": this_player.pCorrect,
+        "genre": this_player.pGenre
     };
 
 
@@ -214,9 +216,9 @@ const endGame = () => {
     });
     jqxhr.always(function() {
         //reset score so for next round it restarts at 0
-        alert( "Your final score is " + localStorage.score
-        + "    You had " + localStorage.num_wrong + " wrong answers");
-        window.location.assign("homepage.html");
+        alert( "Your final score is " + this_player.pScore
+        + "    You had " + this_player.pCorrect + " right answers");
+        window.location.assign("stats.html");
     });
 };
 
