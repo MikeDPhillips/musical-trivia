@@ -200,8 +200,8 @@ const endGame = () => {
 
 
     var jqxhr = $.ajax( {
-        url: "http://localhost:5000/submit",
-        //url: "https://amuseme-trivia-game.herokuapp.com/submit",
+        //url: "http://localhost:5000/submit",
+        url: "https://musical-trivia-app.herokuapp.com/submit",
         type: "POST",
         data:JSON.stringify(playInsert),
         dataType: "json",
