@@ -15,8 +15,9 @@ $(document).ready(function() {
     localStorage.num_wrong = 0;
 });
   var table = new Tabulator(".tabulator", {
-    ajaxURL:"https://amuseme-trivia-game.herokuapp.com/api/history", //change this to the project's website
-    ajaxParams:{key1:"name", key2:"score", key3:"genre", key4:"correct"},
+    ajaxURL:"http://localhost:5000/api/history",
+    //ajaxURL:"https://amuseme-trivia-game.herokuapp.com/api/history", //change this to the project's website
+    ajaxParams:{key1:"name", key2:"score", key3:"genre", key4:"correct", key5:"date"},
     ajaxConfig:{
       method:"GET",
       headers: {
@@ -29,14 +30,15 @@ $(document).ready(function() {
     layout:"fitDataFill",
     layout:"fitColumns",
     columns:[
-    {title:"Name", field:"username", align:"center"},
+    {title:"Name", field:"name", align:"center"},
     {title:"Genre", field:"genre", align:"center"},
       {title:"Correct", field:"correct", sorter:"number"},
-    {title:"Score", field:"score", align:"center", sorter:"number"}
+    {title:"Score", field:"score", align:"center", sorter:"number"},
+      {title:"Date", field:"date", sorter:"datetime"}
     ]
   });
 
-  table.setData();
+  //table.setData();
 
 });
 

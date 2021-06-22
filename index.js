@@ -16,8 +16,12 @@ const { MongoClient } = require('mongodb')
 const uri =
 "mongodb+srv://mdp38:PjoKKicu2ON4YsMl@triviaeast.numpm.mongodb.net/trivia?retryWrites=true&w=majority";
 //Get database connection object
-
-
+let collection = null;
+let client = MongoClient.connect(uri, { useUnifiedTopology: true })
+    .then( (connection) => {
+        const database = connection.db('trivia');
+        collection = database.collection('quiz_scores');
+    })
 
 app.use(express.static(path.join(__dirname, 'src')));
 
@@ -26,6 +30,14 @@ app.get("/api", (req, res) => {
     res.json({message: "Hello from server!"});
 });
 
+app.post('/submit', (req, res) => {
+    console.log(req.body)
+    let name = req.body.name;
+    let score = req.body.score;
+    let correct = req.body.correct;
+    let genre = req.body.genre;
+
+});
 app.get("/api/history", async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
@@ -34,12 +46,16 @@ app.get("/api/history", async (req, res) => {
 
 
     try {
-        let client = await MongoClient.connect(uri, { useUnifiedTopology: true });
-        const database = client.db('trivia');
-        console.log(database);
-        const collection = database.collection('quiz_scores');
         collection.find().toArray()
             .then( results => {
+                results.forEach( (item) => {
+
+                    let timeStamp = parseInt(item._id.toString().substr(0,8), 16)*1000
+                    let date = new Date(timeStamp);
+                        item['date'] = date.toISOString().split('T')[0];
+                        console.log(item['date'] );
+                });
+                console.log(results);
                 res.send(results);
             })
             .catch(error => {
