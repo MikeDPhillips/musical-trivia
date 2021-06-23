@@ -245,3 +245,69 @@ a:visited{
   color:#CC6600;
 }
 
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  background: #1abca6;
+  padding: 10px;
+  border: 2px solid #CC6600;
+  float: left;
+  font-size: 15px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  left: 10vw;
+  top: 25%;
+  width: 80%; /* Full width */
+  height: 60vh; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  -webkit-animation-name: fadeIn; /* Fade in the background */
+  -webkit-animation-duration: 0.8s;
+  animation-name: fadeIn;
+  animation-duration: 0.8s;
+  z-index: 99999;
+  /* Safari, Chrome */
+  border-radius: 3px 3px 3px 3px;
+  -moz-border-radius: 3px;
+  /* Firefox */
+  -webkit-border-radius: 3px;
+}
+
+/* Modal Content */
+.modal-content {
+  position: fixed;
+  bottom: 0;
+  background-color: #fefefe;
+  width: 80%;
+  height: 60vh;
+  -webkit-animation-name: slideIn;
+  -webkit-animation-duration: 0.8s;
+  animation-name: slideIn;
+  animation-duration: 0.8s
+}
+
+.close{
+  cursor: pointer;
+}
+
+@-webkit-keyframes slideIn {
+  from {top: -300px; opacity: 0}
+  to  {top: 25%; opacity: 1}
+}
+
+@keyframes slideIn {
+  from {top: -300px; opacity: 0}
+  to {top: 25%; opacity: 1}
+}
+
+@-webkit-keyframes fadeIn {
+  from {opacity: 0}
+  to {opacity: 1}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0}
+  to {opacity: 1}
+}
+
+

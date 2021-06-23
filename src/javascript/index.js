@@ -72,7 +72,6 @@ $(document).ready(function() {
         {
             localStorage.setItem('username', name); 
             localStorage.score = 0;
-            localStorage.num_wrong = 0;
         }
         window.location.assign("genre.html");
     };
@@ -84,7 +83,6 @@ $(document).ready(function() {
       {
         localStorage.setItem('username', name);
         localStorage.score = 0;
-        localStorage.num_wrong = 0;
       }
         window.location.assign("genre.html");
     };

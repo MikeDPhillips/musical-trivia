@@ -3,7 +3,7 @@
 
 //changes audio
 var change = document.getElementById('change');
-
+var gameResults = [];
 $('html').bind('keypress', function(e) {
     if (e.which === 13) {
         e.preventDefault();
@@ -52,8 +52,9 @@ change.onload = async () => {
     $(change).css('pointer-events', 'all');
 };
 
-const TIME_PER_SONG = 10;
-let tracksRemaining = 5;
+const TIME_PER_SONG = 15;
+const TRACKS_PER_GAME = 6
+var trackNo =  1;
 var counter = TIME_PER_SONG ;
 var timerID = null;
 function countdown() {
@@ -95,27 +96,37 @@ const updateScore = (pts) => {
 };
 
 $(".button").click((event) => {
+  let objResult = {id:trackNo};
   let answer = event.currentTarget.innerText;
   console.log("Your answer is " + answer);
-  if (answer === player.getSongName()) {
+  let correct = player.getSongName();
+  let artist = player.getArtist();
+  objResult['song'] = correct;
+  objResult['artist'] = artist;
+  if (answer === correct) {
     let track = player.getCurrentTrack();
     let time = parseInt($('.counter').text().replace(':',''));
     console.log("Time = " + time);
     let pts = (100-track.popularity)*time;
     console.log("Youre right for " + (100-track.popularity)*time + " points");
-    let scaledPts = 100*pts / ((100)*TIME_PER_SONG);
-    console.log("Scaled value is " + Math.ceil(scaledPts/5)*5);
-    updateScore(Math.ceil(scaledPts/5)*5);
+    let scaledPts = Math.ceil( (100*pts / ((100)*TIME_PER_SONG)) / TRACKS_PER_GAME)*TRACKS_PER_GAME;
+    objResult['score'] = scaledPts;
+    console.log("Scaled value is " + scaledPts);
+    updateScore(scaledPts);
   }
-  nextSong();
+  else
+    objResult['score'] = 0;
+  nextSong(objResult);
 });
 
-const nextSong = () => {
-  tracksRemaining--;
-  if (tracksRemaining===0) {
+const nextSong = (objResult) => {
+  gameResults.push(objResult);
+  console.log (`"Now playing track # ${trackNo}`)
+  if (trackNo === TRACKS_PER_GAME) {
     endGame();
     return;
   }
+  trackNo++;
   player.next();
   changeAudioElement();
   audio.play();
@@ -186,9 +197,26 @@ function shuffle(array) {
   }
 }
 
+
+$(".close").click(function() {
+  window.location.assign("stats.html");
+});
 const endGame = () => {
-  //alert(`Game over you scored ${this_player.pScore} points!`);
-  console.log(this_player);
+  audio.pause();
+  console.log($('#my-results').style);
+    $('#my-results').show();
+  //Handle results modal
+  const table = new Tabulator("#results-table", {
+    height:"311px",
+    data:gameResults,
+    layout:"fitDataTable",
+    columns:[
+      {title:"Q", field:"id"},
+      {title:"Score", field:"score", hozAlign:"right", sorter:"number"},
+      {title:"Song", field:"song"},
+      {title:"Artist", field:"artist"}
+    ],
+  });
 
     //code will be added here to submit to database
     let playInsert = {
@@ -215,36 +243,11 @@ const endGame = () => {
         }
     });
     jqxhr.always(function() {
-        //reset score so for next round it restarts at 0
-        alert( "Your final score is " + this_player.pScore
-        + "    You had " + this_player.pCorrect + " right answers");
-        window.location.assign("stats.html");
+        console.log("Written to databas");
     });
 };
 
 
-/*cont.onclick= function() {
-    modal.style.display = "none";
-    //window.location.reload();
-    player.next();
-    changeAudioElement();
-    document.getElementById("myform").reset();
-
-}*/
-
-/*
 
 
-hint.onclick = function() {
-      hintcount++;
-      //audio.pause();
-      userinput = "Hi Hi Hi";
-      let result = player.checkAnswer(userinput);
-      hintmodal.style.display = "block";
-      let hintcontent = document.getElementById("hintanswer");
-      var songname = result.hint;
-      if (hintcount > 3)
-        hintcontent.innerHTML = "<h1>No more hints!</h1>";
-      else
-        hintcontent.innerHTML = "<h1>Hint: " + songname + "</h1>";
-}*/
+
