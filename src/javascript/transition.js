@@ -203,20 +203,7 @@ $(".close").click(function() {
 });
 const endGame = () => {
   audio.pause();
-  console.log($('#my-results').style);
-    $('#my-results').show();
-  //Handle results modal
-  const table = new Tabulator("#results-table", {
-    height:"311px",
-    data:gameResults,
-    layout:"fitDataTable",
-    columns:[
-      {title:"Q", field:"id"},
-      {title:"Score", field:"score", hozAlign:"right", sorter:"number"},
-      {title:"Song", field:"song"},
-      {title:"Artist", field:"artist"}
-    ],
-  });
+
 
     //code will be added here to submit to database
     let playInsert = {
@@ -243,8 +230,23 @@ const endGame = () => {
         }
     });
     jqxhr.always(function() {
-        console.log("Written to databas");
+        console.log("Written to database");
     });
+
+  $('#my-results').show();
+  //Handle results modal
+  const table = new Tabulator("#results-table", {
+    height:"311px",
+    data:gameResults,
+    layout:"fitDataTable",
+    columns:[
+      {title:"Q", field:"id"},
+      {title:"Score", field:"score", hozAlign:"right", sorter:"number"},
+      {title:"Song", field:"song"},
+      {title:"Artist", field:"artist"}
+    ],
+  });
+
 };
 
 
