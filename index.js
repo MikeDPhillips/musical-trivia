@@ -42,7 +42,7 @@ app.post('/submit', (req, res) => {
        correct:req.body.correct,
        genre:req.body.genre
     }
-    collection.insert(objToInsert)
+    collection.insertOne(objToInsert)
         .then( result => {
           let objToReturn = {
             "success" : "Database has been updated",

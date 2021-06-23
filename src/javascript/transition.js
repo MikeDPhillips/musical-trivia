@@ -230,9 +230,11 @@ const endGame = () => {
         }
     });
     jqxhr.always(function() {
-        console.log("Written to database");
+        showResults();
     });
+};
 
+const showResults = () => {
   $('#my-results').show();
   //Handle results modal
   const table = new Tabulator("#results-table", {
@@ -246,8 +248,7 @@ const endGame = () => {
       {title:"Artist", field:"artist"}
     ],
   });
-
-};
+}
 
 
 
