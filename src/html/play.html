@@ -3,12 +3,12 @@
 
 <head>
 	<meta charset ="utf-8" name="viewport" content = "width=device-width, initial-scale=1" />
-	<link href="../style/transition.css" rel="stylesheet" />
 	<script type="text/javascript" src="https://code.jquery.com/jquery-1.6.4.min.js"></script>
 	<link href="https://unpkg.com/tabulator-tables@4.1.3/dist/css/tabulator_modern.min.css" rel="stylesheet">
 	<script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.1.3/dist/js/tabulator.min.js"></script>
 	<script type ="text/javascript" src="../javascript/textFit.js"></script>
 	<script src="../javascript/player.js"></script>
+	<link href="../style/transition.css" rel="stylesheet" />
 </head>
 
 
@@ -25,7 +25,7 @@
 
 <!-- Score -->
 
-<div class="scorebox hide">
+<div class="scorebox" id="game-score">
 <div class ="score_label">Score
 <span class ="score" id="score">0</span></div>
 </div>
@@ -77,11 +77,14 @@
 
 <!-- Modal for results -->
 <div id="my-results" class="modal">
-	<!-- Modal content -->
-	<div class="modal-content">
-		<span class="close">&times;</span>
 		<div id="results-table"></div>
-
+		 <div id="result-scorebox">
+			<div class ="score_label">Total Score:
+				<span class ="score" id="result-score">0</span></div>
+			 <div id="result-btn-grp">
+				 <button class = "result-button" id="play-again">Play Again </button>
+				 <button class = "result-button" id="high-scores">High Scores</button>
+			 </div>
 	</div>
 
 </div>

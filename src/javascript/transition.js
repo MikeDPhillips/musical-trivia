@@ -1,6 +1,5 @@
 
 
-
 //changes audio
 var change = document.getElementById('change');
 var gameResults = [];
@@ -12,12 +11,20 @@ $('html').bind('keypress', function(e) {
   }
 });
 
+//On page load wait for all the tracks to be loaded in player
+change.onload = async () => {
+  const result = await player.initList();
+  $(change).css('pointer-events', 'all');
+};
+
 
 window.onresize = () => {
   textFit($(".button"), {minFontSize:12, maxFontSize: 50,
     alignVert: false, alignHoriz:false, reProcess:true});
 }
 
+
+//Get the genre and create the player
 var genreForRound = localStorage.getItem('genre');
 console.log(genreForRound);
 var genres = ["hip-hop", "pop", "classical", "country", "rock"];
@@ -29,29 +36,21 @@ if(genreForRound == "shuffle")
 }
 else
     var player = new spotifyPlayer(genreForRound, 5);
-
-
 var isPlaying = false;
+
+
 function changeAudioElement(){
-  //e.preventDefault();
-
-  //var elm = e.target;
   var audio = document.getElementById('audio');
-
   var source = document.getElementById('audioSource');
   let retValue =  player.getPlayerURL();
   if (retValue)
     source.src = player.getPlayerURL();
-
-
-  audio.load(); //call this to just preload the audio without playing
-  audio.play(); //call this to play the song right away
+  console.log("Should play a new song now " + retValue);
+  audio.load(); //call this to play the song right away
+  audio.play();
 }
 
-change.onload = async () => {
-    const result = await player.initList();
-    $(change).css('pointer-events', 'all');
-};
+
 
 const TIME_PER_SONG = 15;
 const TRACKS_PER_GAME = 6
@@ -62,7 +61,13 @@ function countdown() {
     counter--;
     if (counter === 0) {
       $('.counter').text(`:${counter}`);
-      nextSong();
+      let objResult = {id:trackNo};
+      let correct = player.getSongName();
+      let artist = player.getArtist();
+      objResult['song'] = correct;
+      objResult['artist'] = artist;
+      objResult['score'] = 0;
+      nextSong(objResult);
     }
     else {
       $('.counter').text(`:${counter}`);
@@ -96,6 +101,7 @@ const updateScore = (pts) => {
   $("#score").text(this_player.pScore);
 };
 
+//User selects an answer
 $(".button").click((event) => {
   let objResult = {id:trackNo};
   let answer = event.currentTarget.innerText;
@@ -148,12 +154,13 @@ $('#startLink').click(function() {
 
 const beginGame = () => {
   $('.play-container').hide();
+  $('.begin').hide();
+  $('.game-area').show();
+  $('#game-score').show();
+  $('.counter').show();
   score = 0;
-  tracksRemaining = 5;
-  $('.begin').addClass("hide");
-  $('.game-area').removeClass("hide");
-  $('.scorebox').removeClass("hide");
-  $('.counter').removeClass("hide");
+  tracksRemaining = TRACKS_PER_GAME;
+
 
   resetTimer(timerID);
   changeAudioElement();
@@ -167,7 +174,7 @@ const beginGame = () => {
 
 const resetGame = () => {
   $('.game-area').hide();
-  $('.scorebox').hide();
+  $('#game-score').hide();
   $('.counter').hide();
 }
 const getAnswers =  () => {
@@ -204,13 +211,17 @@ function shuffle(array) {
 }
 
 
-$(".close").click(function() {
+$("#high-scores").click(function() {
   window.location.assign("stats.html");
 });
+
+$("#play-again").click( () => {
+  window.location.assign("homepage.html");
+})
 const endGame = () => {
   audio.pause();
+  clearInterval(timerID);
   resetGame();
-
 
     //code will be added here to submit to database
     let playInsert = {
@@ -243,19 +254,25 @@ const endGame = () => {
 
 const showResults = () => {
 
+  $('body').append('<div id="mask"></div>');
+  $('#mask').fadeIn(300);
+
   $('#my-results').show();
   //Handle results modal
   const table = new Tabulator("#results-table", {
-    height:"311px",
+    //height:"311px",
     data:gameResults,
-    layout:"fitDataTable",
+    layout:"fitDataStretch",
+    responsiveLayout:"hide",
+
     columns:[
-      {title:"Q", field:"id"},
+      {title:"Q", field:"id", responsive:0},
       {title:"Score", field:"score", hozAlign:"right", sorter:"number"},
-      {title:"Song", field:"song"},
-      {title:"Artist", field:"artist"}
+      {title:"Song", field:"song", responsive:1},
+      {title:"Artist", field:"artist", responsive:2}
     ],
   });
+  $('#result-score').text(this_player.pScore);
 }
 
 

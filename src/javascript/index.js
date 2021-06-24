@@ -1,6 +1,6 @@
 
 let hpAudio = document.getElementById('hp-audio');
-
+var firstTime = true;
 $(document).ready(function() {
   let hpAudio = document.getElementById('hp-audio');
   $('#hp-body').click( function() {
@@ -110,7 +110,13 @@ $(document).ready(function() {
 
 });
 
+
+
 const playSound = (clicked_id) => {
+  if (firstTime && clicked_id=="hip-hop") {
+    firstTime = false;
+    return;
+  }
   let hpAudio = document.getElementById('hp-audio');
   hpAudio.pause();
   let newId = `audio-${clicked_id}`;
