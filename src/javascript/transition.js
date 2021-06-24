@@ -4,6 +4,7 @@
 //changes audio
 var change = document.getElementById('change');
 var gameResults = [];
+$('.counter').hide();
 $('html').bind('keypress', function(e) {
     if (e.which === 13) {
         e.preventDefault();
