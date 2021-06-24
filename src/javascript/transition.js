@@ -2,7 +2,8 @@
 
 //changes audio
 var change = document.getElementById('change');
-
+var gameResults = [];
+$('.counter').hide();
 $('html').bind('keypress', function(e) {
     if (e.which === 13) {
         e.preventDefault();
@@ -10,12 +11,20 @@ $('html').bind('keypress', function(e) {
   }
 });
 
+//On page load wait for all the tracks to be loaded in player
+change.onload = async () => {
+  const result = await player.initList();
+  $(change).css('pointer-events', 'all');
+};
+
 
 window.onresize = () => {
   textFit($(".button"), {minFontSize:12, maxFontSize: 50,
     alignVert: false, alignHoriz:false, reProcess:true});
 }
 
+
+//Get the genre and create the player
 var genreForRound = localStorage.getItem('genre');
 console.log(genreForRound);
 var genres = ["hip-hop", "pop", "classical", "country", "rock"];
@@ -27,33 +36,38 @@ if(genreForRound == "shuffle")
 }
 else
     var player = new spotifyPlayer(genreForRound, 5);
-
-
 var isPlaying = false;
+
+
 function changeAudioElement(){
-  //e.preventDefault();
-
-  //var elm = e.target;
   var audio = document.getElementById('audio');
-
   var source = document.getElementById('audioSource');
-  source.src = player.getPlayerURL();
-
-  audio.load(); //call this to just preload the audio without playing
-  audio.play(); //call this to play the song right away
+  let retValue =  player.getPlayerURL();
+  if (retValue)
+    source.src = player.getPlayerURL();
+  console.log("Should play a new song now " + retValue);
+  audio.load(); //call this to play the song right away
+  audio.play();
 }
 
-change.onload = async () => {
-    const result = await player.initList();
-};
 
-let tracksRemaining = 5;
-var counter = 30;
+
+const TIME_PER_SONG = 15;
+const TRACKS_PER_GAME = 6
+var trackNo =  1;
+var counter = TIME_PER_SONG ;
 var timerID = null;
 function countdown() {
     counter--;
     if (counter === 0) {
-      clearInterval(timerID);
+      $('.counter').text(`:${counter}`);
+      let objResult = {id:trackNo};
+      let correct = player.getSongName();
+      let artist = player.getArtist();
+      objResult['song'] = correct;
+      objResult['artist'] = artist;
+      objResult['score'] = 0;
+      nextSong(objResult);
     }
     else {
       $('.counter').text(`:${counter}`);
@@ -61,7 +75,7 @@ function countdown() {
 };
 function resetTimer() {
   clearInterval(timerID);
-  counter =30;
+  counter =TIME_PER_SONG ;
   $('.counter').text(`:${counter}`);
   timerID = setInterval(countdown, 1000);
 }
@@ -74,51 +88,59 @@ if (!my_genre)
 
 //player object; name is inherited from index.js
 var this_player = {
-	thename: name,
-	thescore: 0,
-    thegenre: my_genre
+  pName: name,
+	pScore: 0,
+  pCorrect: 0,
+  pGenre: my_genre
 };
 
 
 const updateScore = (pts) => {
-  console.log(pts);
-  this_player.thescore += pts;
-  $("#score").text(this_player.thescore);
+  this_player.pCorrect+=1;
+  this_player.pScore += pts;
+  $("#score").text(this_player.pScore);
 };
 
+//User selects an answer
 $(".button").click((event) => {
+  let objResult = {id:trackNo};
   let answer = event.currentTarget.innerText;
   console.log("Your answer is " + answer);
-  if (answer === player.getSongName()) {
+  let correct = player.getSongName();
+  let artist = player.getArtist();
+  objResult['song'] = correct;
+  objResult['artist'] = artist;
+  if (answer === correct) {
     let track = player.getCurrentTrack();
     let time = parseInt($('.counter').text().replace(':',''));
     console.log("Time = " + time);
     let pts = (100-track.popularity)*time;
     console.log("Youre right for " + (100-track.popularity)*time + " points");
-    let scaledPts = 100*pts / ((100)*30);
-    console.log("Scaled value is " + Math.ceil(scaledPts/5)*5);
-    updateScore(Math.ceil(scaledPts/5)*5);
+    let scaledPts = Math.ceil( (100*pts / ((100)*TIME_PER_SONG)) / TRACKS_PER_GAME)*TRACKS_PER_GAME;
+    objResult['score'] = scaledPts;
+    console.log("Scaled value is " + scaledPts);
+    updateScore(scaledPts);
   }
-  tracksRemaining--;
-  if (tracksRemaining===0) {
+  else
+    objResult['score'] = 0;
+  nextSong(objResult);
+});
+
+const nextSong = (objResult) => {
+  gameResults.push(objResult);
+  console.log (`"Now playing track # ${trackNo}`)
+  if (trackNo === TRACKS_PER_GAME) {
     endGame();
-    window.location.assign("genre.html");
     return;
   }
+  trackNo++;
   player.next();
   changeAudioElement();
   audio.play();
   console.log("Now playing: " + player.getSongName());
   getAnswers();
   resetTimer(timerID);
-});
-
-const endGame = () => {
-  alert(`Game over you scored ${this_player.thescore} points!`);
-  console.log(this_player);
 }
-
-
 var audio = document.getElementById('audio');
 stop.onclick = function() {
   beginGame();
@@ -132,12 +154,13 @@ $('#startLink').click(function() {
 
 const beginGame = () => {
   $('.play-container').hide();
+  $('.begin').hide();
+  $('.game-area').show();
+  $('#game-score').show();
+  $('.counter').show();
   score = 0;
-  tracksRemaining = 5;
-  $('.begin').addClass("hide");
-  $('.game-area').removeClass("hide");
-  $('.scorebox').removeClass("hide");
-  $('.counter').removeClass("hide");
+  tracksRemaining = TRACKS_PER_GAME;
+
 
   resetTimer(timerID);
   changeAudioElement();
@@ -149,6 +172,11 @@ const beginGame = () => {
   getAnswers();
 }
 
+const resetGame = () => {
+  $('.game-area').hide();
+  $('#game-score').hide();
+  $('.counter').hide();
+}
 const getAnswers =  () => {
   console.log("Song list is ");
   let songList = getSongList(player.rawData, 6);
@@ -182,95 +210,72 @@ function shuffle(array) {
   }
 }
 
-// modal.style.display="block";
+
+$("#high-scores").click(function() {
+  window.location.assign("stats.html");
+});
+
+$("#play-again").click( () => {
+  window.location.assign("homepage.html");
+})
+const endGame = () => {
+  audio.pause();
+  clearInterval(timerID);
+  resetGame();
+
+    //code will be added here to submit to database
+    let playInsert = {
+        "name": this_player.pName,
+        "score": this_player.pScore,
+        "correct": this_player.pCorrect,
+        "genre": this_player.pGenre
+    };
 
 
-/*  let result = player.checkAnswer(userinput);
-  console.log(result.isCorrect);
-  console.log(result.hint);
-  if(result.isCorrect)
-  {
-    let content = document.getElementById("answer");
-    content.innerHTML = "<h1>Correct! </h1>" + "<h3> " + player.getSongName() + " by " + player.getArtist() + "</h3>";
-    this_player.thescore++;
-    (document.getElementById("score")).innerHTML = this_player.thescore;
-    //Save new score in localStorage
-  }
-  //modal.style.display = "block";
-  else
-  {
-    this_player.nwrong++;
-    let content = document.getElementById("answer");
-    var songname = player.getSongName();
-    content.innerHTML = "<h1>Wrong, the song is " + songname + "</h1>" + "<h3>" + player.getSongName() + "by " + player.getArtist() + "</h3>" + "<h4>#wrong: " + this_player.nwrong + "</h4>";
+    var jqxhr = $.ajax( {
+        //url: "http://localhost:5000/submit",
+        url: "https://musical-trivia-app.herokuapp.com/submit",
+        type: "POST",
+        data:JSON.stringify(playInsert),
+        dataType: "json",
+        contentType: "application/json; charset==utf-8",
+        success: function(results, status) {
+            console.log("Posted to db successfully.")
+        },
+        error: function(jqxhr, ex) {
+            console.log("Error writing to database " + ex )
+            console.log("\n\n" | jqxhr)
+        }
+    });
+    jqxhr.always(function() {
+        showResults();
+    });
+};
 
-    //Save number wrong in localStorage
-    localStorage.num_wrong = this_player.nwrong;
-    if(this_player.nwrong >= 5)
-    {
+const showResults = () => {
 
-      window.location.assign("stats.html")
-    }
-  }*/
+  $('body').append('<div id="mask"></div>');
+  $('#mask').fadeIn(300);
 
+  $('#my-results').show();
+  //Handle results modal
+  const table = new Tabulator("#results-table", {
+    //height:"311px",
+    data:gameResults,
+    layout:"fitDataStretch",
+    responsiveLayout:"hide",
 
-//     //code will be added here to submit to database
-//     playInsert = {
-//         "username": this_player.thename,
-//         "score": this_player.thescore,
-//         "nwrong": this_player.nwrong,
-//         "genre": this_player.thegenre
-//     };
-
-
-//     var jqxhr = $.ajax( {
-//         url: "https://amuseme-trivia-game.herokuapp.com/submit",
-//         type: "POST",
-//         data:JSON.stringify(playInsert),
-//         dataType: "json",
-//         contentType: "application/json; charset==utf-8",
-//         success: function(results, status) {
-//             console.log("Posted to db successfully.")
-//         },
-//         error: function(jqxhr, ex) {
-//             console.log("Error writing to database " + ex )
-//             console.log("\n\n" | jqxhr)
-//         }
-//     });
-//     jqxhr.always(function() {
-//         //reset score so for next round it restarts at 0
-//         alert( "Your final score is " + localStorage.score
-//         + "    You had " + localStorage.num_wrong + " wrong answers");
-//         localStorage.score = 0;
-//         localStorage.num_wrong = 0;
-//         modal.style.display = "none";
-//         window.location.assign("homepage.html");
-//     });
-// };
+    columns:[
+      {title:"Q", field:"id", responsive:0},
+      {title:"Score", field:"score", hozAlign:"right", sorter:"number"},
+      {title:"Song", field:"song", responsive:1},
+      {title:"Artist", field:"artist", responsive:2}
+    ],
+  });
+  $('#result-score').text(this_player.pScore);
+}
 
 
-/*cont.onclick= function() {
-    modal.style.display = "none";
-    //window.location.reload();
-    player.next();
-    changeAudioElement();
-    document.getElementById("myform").reset();
-
-}*/
-
-/*
 
 
-hint.onclick = function() {
-      hintcount++;
-      //audio.pause();
-      userinput = "Hi Hi Hi";
-      let result = player.checkAnswer(userinput);
-      hintmodal.style.display = "block";
-      let hintcontent = document.getElementById("hintanswer");
-      var songname = result.hint;
-      if (hintcount > 3)
-        hintcontent.innerHTML = "<h1>No more hints!</h1>";
-      else
-        hintcontent.innerHTML = "<h1>Hint: " + songname + "</h1>";
-}*/
+

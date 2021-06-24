@@ -1,52 +1,87 @@
 // index.js
 
-const express = require("express")
+const express = require("express");
+const cors = require('cors');
 const PORT = process.env.PORT || 3001;
 const path = require('path');
-const app = express();
+
+let app = express();
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(cors());
+
 const { MongoClient } = require('mongodb')
-//const uri = process.env.MONGODB_URI;
-const uri =
-"mongodb+srv://mdp38:PjoKKicu2ON4YsMl@triviaeast.numpm.mongodb.net/sample_mflix?retryWrites=true&w=majority";
+
+const uri = "mongodb+srv://mdp38:PjoKKicu2ON4YsMl@triviaeast.numpm.mongodb.net/trivia?retryWrites=true&w=majority"; 
+//Get database connection object
+let collection = null;
+let client = MongoClient.connect(uri, { useUnifiedTopology: true })
+    .then( (connection) => {
+        const database = connection.db('trivia');
+        collection = database.collection('quiz_scores');
+    })
+
 app.use(express.static(path.join(__dirname, 'src')));
+
 
 app.get("/api", (req, res) => {
     res.json({message: "Hello from server!"});
 });
 
-app.get("/api/movie", async (req, res) => {
-    const client = new MongoClient(uri, {useUnifiedTopology:true});
+app.post('/submit', (req, res) => {
+    console.log(req.body)
+    // let name = req.body.name;
+    // let score = req.body.score;
+    // let correct = req.body.correct;
+    // let genre = req.body.genre;
+    let objToInsert = {
+       name:req.body.name,
+       score:req.body.score,
+       correct:req.body.correct,
+       genre:req.body.genre
+    }
+    collection.insertOne(objToInsert)
+        .then( result => {
+          let objToReturn = {
+            "success" : "Database has been updated",
+            "status": 200,
+            "data": objToInsert
+          };
+          res.send(JSON.stringify(objToReturn));
+          console.log(objToReturn);
+        })
 
+});
+app.get("/api/history", async (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.header("Access-Control-Allow-Headers","X-Requested-With");
+    console.log("getting history");
     try {
-        await client.connect();
-        const database = client.db('sample_mflix');
-        const collection = database.collection('movies');
+        collection.find().toArray()
+            .then( results => {
+                results.forEach( (item) => {
 
-        const query = { genres: "Comedy", poster: { $exists: true} };
-        const cursor = await collection.aggregate([
-        { $match: query },
-        { $sample: {size: 1} },
-        { $project:
-            {
-                title: 1,
-                fullplot: 1,
-                poster: 1
-            }
-        }
-        ]);
-        const movie = await cursor.next();
-        return res.json(movie);
+                    let timeStamp = parseInt(item._id.toString().substr(0,8), 16)*1000
+                    let date = new Date(timeStamp);
+                        item['date'] = date.toISOString().split('T')[0];
+                        console.log(item['date'] );
+                });
+                console.log(results);
+                res.send(results);
+            })
+            .catch(error => {
+                console.log(error);
+                res.sendStatus(500);
+            });
+
+        //return res.json({message: "Connected to db!"});
     } catch(err) {
         console.log(err);
     }
-    finally {
-        await client.close();
-    }
 });
 
-app.get("/test", (req, res) => {
-    res.json({message: "This is just a test"});
-});
+
 
 app.get(['/', '/homepage.html'], (req, res) => {
    res.sendFile(path.join(__dirname, 'src/html/homepage.html'));

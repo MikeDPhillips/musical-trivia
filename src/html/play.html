@@ -3,22 +3,29 @@
 
 <head>
 	<meta charset ="utf-8" name="viewport" content = "width=device-width, initial-scale=1" />
-	<link href="../style/transition.css" rel="stylesheet" />
 	<script type="text/javascript" src="https://code.jquery.com/jquery-1.6.4.min.js"></script>
+	<link href="https://unpkg.com/tabulator-tables@4.1.3/dist/css/tabulator_modern.min.css" rel="stylesheet">
+	<script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.1.3/dist/js/tabulator.min.js"></script>
 	<script type ="text/javascript" src="../javascript/textFit.js"></script>
 	<script src="../javascript/player.js"></script>
+	<link href="../style/transition.css" rel="stylesheet" />
 </head>
 
 
 <body id="change">
 
 <div class="wrapper">
-	<div class="header">Amuse-Me</div>
-	<div class="footer">Created by Michael Phillips</div>
+		<div class="header"><img src="../assets/images/logo.png" alt="Our logo" width="100" height="100"/>
+		<h1>AMuseMe</h1>
+		</div>
+
+	<div class="footer">Created by <a href="https://github.com/MikeDPhillips/musical-trivia">Michael Phillips</a> 2021.
+	<a href="mailto:mdphillips@gmail.com"> (Email me)</a>
+	</div>
 
 <!-- Score -->
 
-<div class="scorebox hide">
+<div class="scorebox" id="game-score">
 <div class ="score_label">Score
 <span class ="score" id="score">0</span></div>
 </div>
@@ -63,6 +70,21 @@
 				<button class = "button"><span class="fittedtext">Tool</span></button>
 			</div>
 		</div>
+	</div>
+
+</div>
+
+
+<!-- Modal for results -->
+<div id="my-results" class="modal">
+		<div id="results-table"></div>
+		 <div id="result-scorebox">
+			<div class ="score_label">Total Score:
+				<span class ="score" id="result-score">0</span></div>
+			 <div id="result-btn-grp">
+				 <button class = "result-button" id="play-again">Play Again </button>
+				 <button class = "result-button" id="high-scores">High Scores</button>
+			 </div>
 	</div>
 
 </div>

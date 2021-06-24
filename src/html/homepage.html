@@ -3,7 +3,7 @@
 
 <head>
 	<title>Welcome</title>
-	<link href="../style/index_style.css" rel="stylesheet" />
+	<link id="hp-style" href="../style/index_style.css" rel="stylesheet" />
 	<meta charset ="utf-8" name="viewport" content = "width=device-width, initial-scale=1, user-scalable=0" />
 	<script type="text/javascript" src="https://code.jquery.com/jquery-1.6.4.min.js"></script>
 	<script type="text/javascript" src="../javascript/index.js"></script>
@@ -14,7 +14,8 @@
 </head>
 
 <body>
-	<h1>AMuseMe</h1>
+<div id="hp-body">
+	<p><h1>AMuseMe</h1></p>
 	<p><img src="../assets/images/logo.png" alt="Our logo"/></p>
 	<h2>! Welcome to AMuseMe ! </h2>
 	<h3>- a simple music game -</h3>
@@ -23,7 +24,7 @@
 	<h4><a href="" class="popup">C<span class="changecolor">l</span>i<span class="changecolor">c</span>k<span class="changecolor"> H</span>e<span class="changecolor">r</span>e <span class="changecolor">t</span>o <span class="changecolor">B</span>e<span class="changecolor">g</span>i<span class="changecolor">n</span></a></span></h4>
 
 	<p class="audio">
-	<audio autoplay controls> <source src="../assets/audio/homepage.mp3" type='audio/mp3' /></audio> 
+	<audio id="hp-audio" autoplay controls loop preload="auto"> <source src="../assets/audio/homepage.mp3" type='audio/mp3' /></audio>
 	<div id="copyright">This page features the song “Funny” by NICOHEIDMUSIC, available under a Creative Commons 
 	<a href="https://creativecommons.org/licenses/by-nc/2.5/" target="_blank">Attribution-Noncommercial</a> license.</div></p>
 
@@ -41,7 +42,36 @@
         </fieldset>
   	</form> 
 	</div>
+</div>
 
+
+
+<div id="genre-page">
+
+	<script>
+		console.log(window.location.pathname);
+	</script>
+	<h1> Pick your genre! </h1>
+	<br>
+	<span id="myspan"></span>
+	<audio id="audio-country" controls loop preload="auto" class="audio"> <source src="../assets/audio/country.mp3" type='audio/mp3' /></audio>
+	<audio id="audio-hip-hop" controls loop preload="auto" class="audio"> <source src="../assets/audio/hiphop.mp3" type='audio/mp3' /></audio>
+	<audio id="audio-classical" controls loop preload="auto" class="audio"> <source src="../assets/audio/classical.mp3" type='audio/mp3' /></audio>
+	<audio id="audio-pop" controls loop preload="auto" class="audio"> <source src="../assets/audio/pop.mp3" type='audio/mp3' /></audio>
+	<audio id="audio-rock" controls loop preload="auto" class="audio"> <source src="../assets/audio/rock.mp3" type='audio/mp3' /></audio>
+	<audio id="audio-shuffle" controls loop preload="auto" class="audio"> <source src="../assets/audio/mystery.mp3" type='audio/mp3' /></audio>
+
+	<form>
+		<!--All audio files licensed under creative commons-->
+		<a href="play.html"><img id="country" src = "../assets/images/country.jpg" width=300 height = 200 title="country" alt="country" class="thumbnail" onMouseOver="playSound(this.id)" onMouseOut="stopSound(this.id)" onclick="saveGenre(this.id)"></a>
+		<a href="play.html"><img id="hip-hop" src = "../assets/images/hiphop.jpg" width=300 height = 200 title="hiphop" alt="hiphop" class="thumbnail"  onMouseOver="playSound(this.id)" onMouseOut="stopSound(this.id)" onclick="saveGenre(this.id)"></a>
+		<a href="play.html"><img id="classical" src = "../assets/images/classical.jpg" width=300 height = 200 title="classical" alt="classical" class="thumbnail" onMouseOver="playSound(this.id)" onMouseOut="stopSound(this.id)" onclick="saveGenre(this.id)"></a>
+		<br>
+		<a href="play.html"><img id="pop" src = "../assets/images/pop.jpg" width=300 height = 200 title="pop" alt="pop" class="thumbnail" onMouseOver="playSound(this.id)" onMouseOut="stopSound(this.id)" onclick="saveGenre(this.id)"></a>
+		<a href="play.html"><img id="rock" src = "../assets/images/rock.jpg" width=300 height = 200 title="rock" alt="rock" class="thumbnail" onMouseOver="playSound(this.id)" onMouseOut="stopSound(this.id)" onclick="saveGenre(this.id)"></a>
+		<a href="play.html"><img id="shuffle" src = "../assets/images/shuffle.png" width=300 height = 200 title="shuffle" alt="shuffle" class="thumbnail" onMouseOver="playSound(this.id)" onMouseOut="stopSound(this.id)" onclick="saveGenre(this.id)"></a>
+	</form>
+</div>
 
 </body>
 
