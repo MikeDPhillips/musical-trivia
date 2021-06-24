@@ -13,8 +13,6 @@ app.use(cors());
 const { MongoClient } = require('mongodb')
 
 const uri = process.env.MONGODB_URI;
-//const uri =
-//"mongodb+srv://mdp38:PjoKKicu2ON4YsMl@triviaeast.numpm.mongodb.net/trivia?retryWrites=true&w=majority";
 //Get database connection object
 let collection = null;
 let client = MongoClient.connect(uri, { useUnifiedTopology: true })
