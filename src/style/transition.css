@@ -296,6 +296,7 @@ a:visited{
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
+  overflow: auto;
   background: white;
   font-size: calc(18px + 1vh);
   font-family: "Open Sans", sans-serif;
