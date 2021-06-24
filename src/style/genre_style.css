@@ -15,6 +15,9 @@ h1{
 	letter-spacing:0.2em;
 	color:#f2570e;
 }
+.audio {
+	display: none;
+}
 
 img {
   border-radius: 30%;

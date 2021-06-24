@@ -151,6 +151,9 @@ img{
   }
 }
 
+div#genre-page {
+    display: none;
+}
 
 /* Mask for background, by default is not display */
 #mask {
