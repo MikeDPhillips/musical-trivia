@@ -27,6 +27,8 @@ $(document).ready(function() {
       credentials: 'omit'
     },
     autoResize:true,
+    pagination:"local",
+    paginationSize:40,
     layout:"fitDataFill",
     layout:"fitColumns",
     columns:[

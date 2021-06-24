@@ -28,7 +28,7 @@ spotifyPlayer.prototype.initList = function() {
             data: {
                 seed_genres: self.genre,
                 market: 'US',
-                min_popularity: 50,
+                min_popularity: 25,
                 offset: Math.random() * 100,
                 limit: 50
             },

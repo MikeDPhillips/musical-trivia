@@ -161,7 +161,7 @@ body {
   grid-column-start: 2;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 660px) {
   .btn-group {
     display: grid;
     grid-template-columns: 1fr;
@@ -217,6 +217,11 @@ body {
 }
 @media (hover) {
   .button:hover {
+    background-color: #CC6600;
+    color: #FFFFFF;
+    border-color: black;
+  }
+  .result-button:hover {
     background-color: #CC6600;
     color: #FFFFFF;
     border-color: black;
