@@ -164,6 +164,11 @@ const beginGame = () => {
   getAnswers();
 }
 
+const resetGame = () => {
+  $('.game-area').hide();
+  $('.scorebox').hide();
+  $('.counter').hide();
+}
 const getAnswers =  () => {
   console.log("Song list is ");
   let songList = getSongList(player.rawData, 6);
@@ -203,6 +208,7 @@ $(".close").click(function() {
 });
 const endGame = () => {
   audio.pause();
+  resetGame();
 
 
     //code will be added here to submit to database
@@ -235,6 +241,7 @@ const endGame = () => {
 };
 
 const showResults = () => {
+
   $('#my-results').show();
   //Handle results modal
   const table = new Tabulator("#results-table", {

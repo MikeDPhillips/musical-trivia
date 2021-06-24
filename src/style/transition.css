@@ -252,15 +252,11 @@ a:visited{
   background: #1abca6;
   padding: 10px;
   border: 2px solid #CC6600;
-  float: left;
   font-size: 15px;
   font-family: "Open Sans", sans-serif;
   font-weight: bold;
-  left: 10vw;
-  top: 25%;
-  width: 80%; /* Full width */
-  height: 60vh; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
+ left: 2vw;
+  top: 2vh;
   -webkit-animation-name: fadeIn; /* Fade in the background */
   -webkit-animation-duration: 0.8s;
   animation-name: fadeIn;
@@ -276,15 +272,38 @@ a:visited{
 /* Modal Content */
 .modal-content {
   position: fixed;
-  bottom: 0;
+ /* bottom: 0;
   background-color: #fefefe;
   width: 80%;
   height: 60vh;
   -webkit-animation-name: slideIn;
   -webkit-animation-duration: 0.8s;
   animation-name: slideIn;
-  animation-duration: 0.8s
+  animation-duration: 0.8s*/
 }
+
+.tabulator{
+  position:relative;
+  width: 90vw;
+  left:5vw;
+}
+
+.tabulator .tabulator-header {
+  width: 100%;
+  border-bottom: 3px solid #f2570e;
+  margin-bottom: 4px;
+  color: #f2570e;
+  font-weight: 700;
+  white-space: nowrap;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  padding-left: 10px;
+  font-size: 1.1em
+}
+
+
 
 .close{
   cursor: pointer;
