@@ -29,11 +29,6 @@ app.get("/api", (req, res) => {
 });
 
 app.post('/submit', (req, res) => {
-    console.log(req.body)
-    // let name = req.body.name;
-    // let score = req.body.score;
-    // let correct = req.body.correct;
-    // let genre = req.body.genre;
     let objToInsert = {
        name:req.body.name,
        score:req.body.score,
