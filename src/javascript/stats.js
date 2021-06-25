@@ -31,6 +31,10 @@ $(document).ready(function() {
     paginationSize:40,
     layout:"fitDataFill",
     layout:"fitColumns",
+    initialSort:[
+      {column:"score", dir:"desc"},
+      {column:"date", dir:"desc"}
+    ],
     columns:[
     {title:"Name", field:"name", align:"center"},
     {title:"Genre", field:"genre", align:"center"},
