@@ -5,7 +5,7 @@
 ## [Play now on heroku!](https://musical-trivia-app.herokuapp.com)
 ![Screen shot of the app.](amuseme_demo.gif)
 
-##About the App
+## About the App
 The front end is built using HTML5, CSS3, and jQuery. The back end runs on 
 heroku and node.js using MongoDB for storage needs. It works by first using
 the spotify recommendation engine via its web API. After loading songs from the
