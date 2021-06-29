@@ -1,5 +1,6 @@
 
-
+$("#ready").hide();
+$("#loading").show();
 //changes audio
 var change = document.getElementById('change');
 var gameResults = [];
@@ -15,6 +16,8 @@ $('html').bind('keypress', function(e) {
 change.onload = async () => {
   const result = await player.initList();
   $(change).css('pointer-events', 'all');
+  $("#ready").show();
+  $("#loading").hide();
 };
 
 

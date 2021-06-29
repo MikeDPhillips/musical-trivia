@@ -31,12 +31,17 @@ $(document).ready(function() {
     paginationSize:40,
     layout:"fitDataFill",
     layout:"fitColumns",
+    initialSort:[
+      {column:"date", dir:"desc"},
+      {column:"score", dir:"desc"}
+
+    ],
     columns:[
     {title:"Name", field:"name", align:"center"},
     {title:"Genre", field:"genre", align:"center"},
       {title:"Correct", field:"correct", sorter:"number"},
     {title:"Score", field:"score", align:"center", sorter:"number"},
-      {title:"Date", field:"date", sorter:"datetime"}
+      {title:"Date", field:"date", sorter:"date", sorterParams:{format:"YYYY-MM-DD"}}
     ]
   });
 

@@ -12,7 +12,7 @@ app.use(cors());
 
 const { MongoClient } = require('mongodb')
 
-const uri = "mongodb+srv://mdp38:PjoKKicu2ON4YsMl@triviaeast.numpm.mongodb.net/trivia?retryWrites=true&w=majority"; 
+const uri = process.env.MONGO_URL;
 //Get database connection object
 let collection = null;
 let client = MongoClient.connect(uri, { useUnifiedTopology: true })
@@ -29,11 +29,6 @@ app.get("/api", (req, res) => {
 });
 
 app.post('/submit', (req, res) => {
-    console.log(req.body)
-    // let name = req.body.name;
-    // let score = req.body.score;
-    // let correct = req.body.correct;
-    // let genre = req.body.genre;
     let objToInsert = {
        name:req.body.name,
        score:req.body.score,
@@ -103,4 +98,3 @@ app.get('/stats.html', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
 });
-
