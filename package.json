@@ -1,7 +1,7 @@
 {
   "name": "musical-trivia",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.9.0",
+  "description": "A fun musical trivia game using node.js",
   "engines": {
     "node": ">15.0"
   },
@@ -9,12 +9,17 @@
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
     "mongodb": "^3.6.9",
     "cors": "^2.8.5"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MikeDPhillips/musical-trivia.git"
+  },
+  "author": "Michael Phillips",
+  "bugs": {
+    "url": "https://github.com/MikeDPhillips/musical-trivia/issues"},
+  "homepage": "https://github.com/MikeDPhillips/musical-trivia#readme"
   }

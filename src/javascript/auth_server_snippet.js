@@ -8,8 +8,8 @@ var app = express();
 
 
 app.get('/credential', function(req, res) {
-    const client_id = 'efa771d3b7fb42deb7936dbf833141f8';
-    const client_secret = 'cbeb9c6e4dbf4db0ba252158d1ae27eb';
+    const client_id = '';
+    const client_secret = '';
 
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -34,7 +34,7 @@ app.get('/credential', function(req, res) {
             console.error(error);
             return;
         }
-        else 
+        else
             console.log(response.statusCode);
     }
 
